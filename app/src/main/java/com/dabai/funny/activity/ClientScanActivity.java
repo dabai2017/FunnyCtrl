@@ -253,7 +253,6 @@ public class ClientScanActivity extends AppCompatActivity implements CameraScann
                 Intent intent = new Intent(this,ClientToolActivity.class);
                 startActivity(intent);
 
-
             } else {
 
                 resdia.setMessage("这个二维码里不包含服务器信息");
@@ -317,7 +316,6 @@ public class ClientScanActivity extends AppCompatActivity implements CameraScann
 
             text = "服务器名称:"+Config.ssid+
             "\n密码:"+Config.pwd;
-
 
 
             resdia.setMessage(text);

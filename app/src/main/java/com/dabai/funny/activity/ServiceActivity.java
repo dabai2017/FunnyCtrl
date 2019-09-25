@@ -60,6 +60,12 @@ public class ServiceActivity extends AppCompatActivity {
         }
 
         handler.post(task);
+
+        Config.ssid = "正在启动服务";
+        Config.pwd="null";
+        Config.IP="null";
+        Config.IPsum = "0";
+
     }
 
     private void init_val() {
