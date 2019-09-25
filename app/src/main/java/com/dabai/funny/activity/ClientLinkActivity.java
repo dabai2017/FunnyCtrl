@@ -35,14 +35,15 @@ public class ClientLinkActivity extends AppCompatActivity {
     public void cliplink(View view) {
         ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         String result = clipboardManager.getText().toString();
-        if (result.contains("https") && result.contains("ssid")) {
+        if (result.contains("funny") && result.contains("ssid")) {
 
             Config.ssid = result.split("/")[3].split("&")[1].split("=")[1];
             Config.pwd = result.split("/")[3].split("&")[2].split("=")[1];
             Config.IP = result.split("/")[3].split("&")[3].split("=")[1];
 
-            if (result.contains("https") && result.contains("ssid")) {
-                Intent intent = new Intent(this,ClientToolActivity.class);
+            if (result.contains("funny") && result.contains("ssid")) {
+                finish();
+                Intent intent = new Intent(this, ClientToolActivity.class);
                 startActivity(intent);
             }
 
@@ -59,14 +60,15 @@ public class ClientLinkActivity extends AppCompatActivity {
 
         TextInputEditText tie = findViewById(R.id.tie1);
         String result = tie.getText().toString();
-        if (result.contains("https") && result.contains("ssid")) {
+        if (result.contains("funny") && result.contains("ssid")) {
 
             Config.ssid = result.split("/")[3].split("&")[1].split("=")[1];
             Config.pwd = result.split("/")[3].split("&")[2].split("=")[1];
             Config.IP = result.split("/")[3].split("&")[3].split("=")[1];
 
-            if (result.contains("https") && result.contains("ssid")) {
-                Intent intent = new Intent(this,ClientToolActivity.class);
+            if (result.contains("funny") && result.contains("ssid")) {
+                finish();
+                Intent intent = new Intent(this, ClientToolActivity.class);
                 startActivity(intent);
             }
 

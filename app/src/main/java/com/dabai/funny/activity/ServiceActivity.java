@@ -177,7 +177,7 @@ public class ServiceActivity extends AppCompatActivity {
                 .positiveText("关闭")
                 .show();
 
-        fun = ("https://dabai2017.github.io/?tip="+Build.MODEL+"&ssid="+Config.ssid+"&pass="+Config.pwd+
+        fun = ("funny://dabai2017.github.io/?tip="+Build.MODEL+"&ssid="+Config.ssid+"&pass="+Config.pwd+
         "&ip="+Config.IP).replace(" ","");
 
         Log.d(TAG, fun.split("/")[3]);
@@ -193,9 +193,22 @@ public class ServiceActivity extends AppCompatActivity {
 
     public void share_text(View view) {
 
-        new DabaiUtils().sendText(context,fun);
+        sendText(fun);
 
     }
+
+
+    private void sendText(String p0)
+    {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is text to send.");
+        // 指定发送内容的类型
+        sendIntent.setType("text/plain");
+        sendIntent.putExtra(Intent.EXTRA_TEXT,p0);
+        startActivity(Intent.createChooser(sendIntent,"Share"));
+    }
+
 
 
 

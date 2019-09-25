@@ -248,8 +248,9 @@ public class ClientScanActivity extends AppCompatActivity implements CameraScann
         if (data != null) {
             String result = data;
 
-            if (result.contains("https") && result.contains("ssid")) {
+            if (result.contains("funny") && result.contains("ssid")) {
 
+                finish();
                 Intent intent = new Intent(this,ClientToolActivity.class);
                 startActivity(intent);
 
@@ -306,7 +307,7 @@ public class ClientScanActivity extends AppCompatActivity implements CameraScann
     }
 
     private void checkQR(String result) {
-        if (result.contains("https") && result.contains("ssid")) {
+        if (result.contains("funny") && result.contains("ssid")) {
 
             String text = "";
 
