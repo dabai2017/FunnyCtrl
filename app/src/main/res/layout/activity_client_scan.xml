@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#ffffff"
     android:layout_height="match_parent"
     tools:context=".activity.ClientScanActivity">
 
@@ -24,7 +25,7 @@
                 android:layout_marginTop="50dp"
                 android:padding="5dp"
                 android:textSize="23sp"
-                android:text="将二维码/条码放入框中"
+                android:text="将服务器码放入框中"
                 />
 
             <androidx.cardview.widget.CardView

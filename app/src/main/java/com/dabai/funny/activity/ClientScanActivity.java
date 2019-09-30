@@ -282,8 +282,6 @@ public class ClientScanActivity extends AppCompatActivity implements CameraScann
                 Window window = resdia.getWindow();//对话框窗口
                 window.setGravity(Gravity.BOTTOM);//设置对话框显示在屏幕中间
                 window.setWindowAnimations(R.style.dialog_style_bottom);//添加动画
-
-
             }
 
 
@@ -313,10 +311,12 @@ public class ClientScanActivity extends AppCompatActivity implements CameraScann
 
             Config.ssid = result.split("/")[3].split("&")[1].split("=")[1];
             Config.pwd = result.split("/")[3].split("&")[2].split("=")[1];
-            Config.IP = result.split("/")[3].split("&")[3].split("=")[1];
+            Config.HostIP = result.split("/")[3].split("&")[3].split("=")[1];
+
 
             text = "服务器名称:"+Config.ssid+
-            "\n密码:"+Config.pwd;
+            "\n密码:"+Config.pwd+
+            "\nIP:"+Config.HostIP;
 
 
             resdia.setMessage(text);

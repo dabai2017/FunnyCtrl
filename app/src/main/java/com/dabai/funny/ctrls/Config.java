@@ -25,7 +25,7 @@ package com.dabai.funny.ctrls;
 
 public class Config {
 
-    public static String ssid = "正在启动服务",pwd,IP,IPsum = "0";
+    public static String ssid = "未配置",pwd,IP,HostIP,IPsum = "0";
 
 
 }

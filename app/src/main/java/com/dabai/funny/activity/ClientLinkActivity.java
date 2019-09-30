@@ -39,7 +39,7 @@ public class ClientLinkActivity extends AppCompatActivity {
 
             Config.ssid = result.split("/")[3].split("&")[1].split("=")[1];
             Config.pwd = result.split("/")[3].split("&")[2].split("=")[1];
-            Config.IP = result.split("/")[3].split("&")[3].split("=")[1];
+            Config.HostIP = result.split("/")[3].split("&")[3].split("=")[1];
 
             if (result.contains("funny") && result.contains("ssid")) {
                 finish();
@@ -64,7 +64,7 @@ public class ClientLinkActivity extends AppCompatActivity {
 
             Config.ssid = result.split("/")[3].split("&")[1].split("=")[1];
             Config.pwd = result.split("/")[3].split("&")[2].split("=")[1];
-            Config.IP = result.split("/")[3].split("&")[3].split("=")[1];
+            Config.HostIP = result.split("/")[3].split("&")[3].split("=")[1];
 
             if (result.contains("funny") && result.contains("ssid")) {
                 finish();
@@ -75,7 +75,7 @@ public class ClientLinkActivity extends AppCompatActivity {
         } else {
             new MaterialDialog.Builder(this)
                     .title("提示")
-                    .content("剪切板不包括服务器地址!")
+                    .content("输入的不包括服务器地址!")
                     .positiveText("确认")
                     .show();
         }

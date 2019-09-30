@@ -34,7 +34,7 @@ public class ClientActivity extends AppCompatActivity {
 
                     Config.ssid = result.split("/")[3].split("&")[1].split("=")[1];
                     Config.pwd = result.split("/")[3].split("&")[2].split("=")[1];
-                    Config.IP = result.split("/")[3].split("&")[3].split("=")[1];
+                    Config.HostIP = result.split("/")[3].split("&")[3].split("=")[1];
 
                     if (result.contains("funny") && result.contains("ssid")) {
                         finish();

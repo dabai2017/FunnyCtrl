@@ -4,6 +4,7 @@
     package="com.dabai.funny">
     <!-- 权限申请 -->
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:debuggable="false"
         android:icon="@mipmap/ic_launcher"
