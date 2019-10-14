@@ -26,7 +26,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -60,6 +62,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +79,7 @@ public class ServiceActivity extends AppCompatActivity {
     private DatagramSocket ds;
     private StringBuffer sb;
     private Socket socket;
+    private ListView lv;
 
 
     @Override
@@ -101,6 +105,18 @@ public class ServiceActivity extends AppCompatActivity {
         Config.pwd = "null";
         Config.IP = "null";
         Config.IPsum = "0";
+        lv = findViewById(R.id.lv);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView textView = findViewById(R.id.mubiao);
+                textView.setText(((TextView)view).getText().toString());
+            }
+        });
+
+
+        msgs = findViewById(R.id.msgs);
 
     }
 
@@ -318,7 +334,7 @@ public class ServiceActivity extends AppCompatActivity {
 
     public void f5(){
         //刷新列表
-        ListView lv = findViewById(R.id.lv);
+
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,people.keySet().toArray());
         lv.setAdapter(adapter);
     }
@@ -330,12 +346,18 @@ public class ServiceActivity extends AppCompatActivity {
         String txt = text.split(":")[1];
         if (head.equals("连接")){
             people.put(txt,socket);
-            Toast.makeText(context, txt+" 进入服务器", Toast.LENGTH_SHORT).show();
+            addSystemMsg(txt+" 进入服务器");
             checkSize();
         }else if (head.equals("断开")){
             people.remove(txt);
-            Toast.makeText(context, txt+" 离开服务器", Toast.LENGTH_SHORT).show();
+            addSystemMsg(txt+" 离开服务器");
             checkSize();
+        }else if (head.equals("全体消息")){
+            for (Object str : people.keySet()) {
+                sendMsg(str.toString(),txt);
+            }
+
+
         }
 
 
@@ -347,14 +369,23 @@ public class ServiceActivity extends AppCompatActivity {
         if (people.size() > 0){
             findViewById(R.id.lv).setVisibility(View.VISIBLE);
             findViewById(R.id.textView8).setVisibility(View.GONE);
-
+            findViewById(R.id.allview).setVisibility(View.VISIBLE);
         }else {
             findViewById(R.id.lv).setVisibility(View.GONE);
             findViewById(R.id.textView8).setVisibility(View.VISIBLE);
+            findViewById(R.id.allview).setVisibility(View.GONE);
 
         }
     }
 
+    public String getTagUser(){
+        TextView te = findViewById(R.id.mubiao);
+        return te.getText().toString();
+    }
+    public void setTagUser(String a){
+        TextView te = findViewById(R.id.mubiao);
+        te.setText(a);
+    }
 
     public static String getWifiApSSID(Context context) {
         try {
@@ -555,7 +586,6 @@ public class ServiceActivity extends AppCompatActivity {
                       .negativeText("取消")
                       .show();
 
-
           }
 
 
@@ -565,5 +595,96 @@ public class ServiceActivity extends AppCompatActivity {
     }
 
 
+    public void allpeo(View view) {
+        TextView textView = findViewById(R.id.mubiao);
+        textView.setText("All People");
+    }
 
+    TextView msgs;
+
+    public void addSystemMsg(String text){
+        msgs.setText(msgs.getText().toString()+"系统 : "+text + "\n");
+    }
+    public void addMsg(String text){
+        msgs.setText(msgs.getText().toString()+text + "\n");
+    }
+
+
+
+    private void sendMsg(final String ip, final String text) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    //1.创建监听指定服务器地址以及指定服务器监听的端口号
+                    Socket socket = new Socket(ip, 7658);
+                    //2.拿到客户端的socket对象的输出流发送给服务器数据
+                    OutputStream os = socket.getOutputStream();
+                    //写入要发送给服务器的数据
+                    String s1 = new String(text.getBytes(),"UTF-8");
+                    os.write(s1.getBytes());
+                    os.flush();
+                    socket.shutdownOutput();
+                    os.close();
+                    socket.close();
+                } catch (UnknownHostException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                new MaterialDialog.Builder(ServiceActivity.this)
+                                        .title("提示")
+                                        .content("异常 : "+ex)
+                                        .positiveText("确认")
+                                        .cancelable(false)
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                finish();
+                                            }
+                                        })
+                                        .show();
+                            } catch (Exception exc) {
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    ex = e.getMessage();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                new MaterialDialog.Builder(ServiceActivity.this)
+                                        .title("提示")
+                                        .content("异常 : "+ex)
+                                        .positiveText("确认")
+                                        .cancelable(false)
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                finish();
+                                            }
+                                        })
+                                        .show();
+                            } catch (Exception exc) {
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+    String ex;
+
+
+    public void service_send(View view) {
+        EditText ed = findViewById(R.id.editText);
+        String msg = Build.MODEL +"(管理员) : "+ed.getText().toString();
+
+
+        sendMsg(getTagUser(),msg);
+        addMsg(msg);
+ed.setText("");
+    }
 }

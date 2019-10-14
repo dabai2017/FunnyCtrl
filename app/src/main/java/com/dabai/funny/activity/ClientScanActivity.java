@@ -161,7 +161,6 @@ public class ClientScanActivity extends AppCompatActivity implements CameraScann
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        // TODO 当View大小发生变化时，要进行调整。
 //        mTextureView.setImageFrameMatrix();
 //        mCameraScanner.setPreviewSize(width, height);
 //        mCameraScanner.setFrameRect(mScannerFrameView.getLeft(), mScannerFrameView.getTop(), mScannerFrameView.getRight(), mScannerFrameView.getBottom());

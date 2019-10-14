@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,8 @@ public class ClientToolActivity extends AppCompatActivity {
     WifiInfo mWifiInfo;
     String TAG = "dabai";
     TextView te1, te2, te4, te5;
+    private StringBuffer sb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,7 @@ public class ClientToolActivity extends AppCompatActivity {
         apinit();
 
         handler.post(task);//立即调用
-
+        msgs = findViewById(R.id.msgs);
     }
 
     //初始化 wifi连接
@@ -168,6 +171,13 @@ public class ClientToolActivity extends AppCompatActivity {
                                         .title("提示")
                                         .content("异常 : "+ex)
                                         .positiveText("确认")
+                                        .cancelable(false)
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                finish();
+                                            }
+                                        })
                                         .show();
                             } catch (Exception exc) {
                             }
@@ -183,6 +193,13 @@ public class ClientToolActivity extends AppCompatActivity {
                                         .title("提示")
                                         .content("异常 : "+ex)
                                         .positiveText("确认")
+                                        .cancelable(false)
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                finish();
+                                            }
+                                        })
                                         .show();
                             } catch (Exception exc) {
                             }
@@ -200,12 +217,15 @@ public class ClientToolActivity extends AppCompatActivity {
 
         if (text.startsWith("欢迎连接")){
 
+           addSystemMsg(text);
+
             try {
-                new MaterialDialog.Builder(this)
-                        .title("提示")
-                        .content(text)
-                        .positiveText("确认")
-                        .show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        openLin();
+                    }
+                }).start();
             } catch (Exception e) {
             }
 
@@ -319,6 +339,75 @@ public class ClientToolActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    TextView msgs;
+
+    public void addSystemMsg(String text){
+        msgs.setText(msgs.getText().toString()+"系统 : "+text + "\n");
+    }
+    public void addMsg(String text){
+        msgs.setText(msgs.getText().toString()+text + "\n");
+    }
 
 
+
+
+    /**
+     * 开启监听客户消息
+     *
+     * @return
+     */
+
+    public void openLin() {
+
+
+        //开启socket监听,
+        ServerSocket serverSocket = null;
+        try {
+            serverSocket = new ServerSocket(7658);
+        } catch (IOException e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "7658端口被占用", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        while (true) {
+
+            InputStream inputStream = null;
+            try {
+                Socket socket = serverSocket.accept(); //开始监听5040端口
+                inputStream = socket.getInputStream();
+                int lenght = 0;
+                byte[] buff = new byte[1024];
+                sb = new StringBuffer();
+                while ((lenght = inputStream.read(buff)) != -1) {
+                    sb.append(new String(buff, 0, lenght, "UTF-8"));
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //检查来自7658的消息
+                        addMsg(sb.toString());
+                    }
+                });
+                socket.shutdownInput();
+                // 关闭IO资源
+                inputStream.close();
+                socket.close();
+            } catch (Exception e) {
+                Log.d(TAG, "openLin: " + e);
+            }
+
+        }
+    }
+
+
+    public void client_send(View view) {
+        EditText ed = findViewById(R.id.editText);
+        String msg = Build.MODEL +" : "+ed.getText().toString();
+        sendMsg("全体消息:"+msg);
+
+    }
 }
